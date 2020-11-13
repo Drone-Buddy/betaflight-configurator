@@ -63,9 +63,18 @@ TABS.configuration.initialize = function (callback, scrollPosition) {
     }
 
     function load_gps_config() {
+        var next_callback = load_aux_gps_config;
+        if(semver.gte(CONFIG.apiVersion, "1.33.0")) {
+            MSP.send_message(MSPCodes.MSP_GPS_CONFIG, false, false, next_callback);
+        } else {
+            next_callback();
+        }
+    }
+
+    function load_aux_gps_config() {
         var next_callback = load_acc_trim;
         if(semver.gte(CONFIG.apiVersion, "1.33.0")) {
-            MSP.send_message(MSPCodes.MSP_GPS_CONFIG, false, false, load_acc_trim);
+            MSP.send_message(MSPCodes.MSP_AUX_GPS_CONFIG, false, false, next_callback);
         } else {
             next_callback();
         }
@@ -733,6 +742,11 @@ TABS.configuration.initialize = function (callback, scrollPosition) {
             gps_protocol_e.append('<option value="' + i + '">' + gpsProtocols[i] + '</option>');
         }
 
+        var aux_gps_protocol_e = $('select.aux_gps_protocol');
+        for (var i = 0; i < gpsProtocols.length; i++) {
+            aux_gps_protocol_e.append('<option value="' + i + '">' + gpsProtocols[i] + '</option>');
+        }
+
         const gps_ublox_galileo_e = $('.gps_ublox_galileo');
 
         gps_protocol_e.change(function () {
@@ -743,14 +757,34 @@ TABS.configuration.initialize = function (callback, scrollPosition) {
         });
         gps_protocol_e.val(GPS_CONFIG.provider).change();
 
+        const aux_gps_ublox_galileo_e = $('.aux_gps_ublox_galileo');
+
+        aux_gps_protocol_e.change(function () {
+            AUX_GPS_CONFIG.provider = parseInt($(this).val());
+
+            const enableGalileoVisible = semver.gte(CONFIG.apiVersion, API_VERSION_1_43) && AUX_GPS_CONFIG.provider === gpsProtocols.indexOf('UBLOX');
+            aux_gps_ublox_galileo_e.toggle(enableGalileoVisible);
+        });
+        aux_gps_protocol_e.val(AUX_GPS_CONFIG.provider).change();
+
+
         $('input[name="gps_ublox_galileo"]').change(function() {
             GPS_CONFIG.ublox_use_galileo = $(this).is(':checked') ? 1 : 0;
         }).prop('checked', GPS_CONFIG.ublox_use_galileo > 0).change();
+
+       $('input[name="aux_gps_ublox_galileo"]').change(function() {
+            AUX_GPS_CONFIG.ublox_use_galileo = $(this).is(':checked') ? 1 : 0;
+        }).prop('checked', AUX_GPS_CONFIG.ublox_use_galileo > 0).change();
 
         $('.gps_home_once').toggle(semver.gte(CONFIG.apiVersion, API_VERSION_1_43));
         $('input[name="gps_home_once"]').change(function() {
             GPS_CONFIG.home_point_once = $(this).is(':checked') ? 1 : 0;
         }).prop('checked', GPS_CONFIG.home_point_once > 0).change();
+
+        $('.aux_gps_home_once').toggle(semver.gte(CONFIG.apiVersion, API_VERSION_1_43));
+        $('input[name="aux_gps_home_once"]').change(function() {
+            AUX_GPS_CONFIG.home_point_once = $(this).is(':checked') ? 1 : 0;
+        }).prop('checked', AUX_GPS_CONFIG.home_point_once > 0).change();
 
         $('input[name="gps_auto_baud"]').prop('checked', GPS_CONFIG.auto_baud == 1);
         $('input[name="gps_auto_config"]').prop('checked', GPS_CONFIG.auto_config == 1);
@@ -760,6 +794,16 @@ TABS.configuration.initialize = function (callback, scrollPosition) {
         } else {
             $('.select.gps_auto_baud').hide();
             $('.select.gps_auto_config').hide();
+        }
+
+        $('input[name="aux_gps_auto_baud"]').prop('checked', AUX_GPS_CONFIG.auto_baud == 1);
+        $('input[name="aux_gps_auto_config"]').prop('checked', AUX_GPS_CONFIG.auto_config == 1);
+        if (semver.gte(CONFIG.apiVersion, "1.34.0")) {
+            $('.select.aux_gps_auto_baud').show();
+            $('.select.aux_gps_auto_config').show();
+        } else {
+            $('.select.aux_gps_auto_baud').hide();
+            $('.select.aux_gps_auto_config').hide();
         }
 
         var gps_baudrate_e = $('select.gps_baudrate');
@@ -777,6 +821,20 @@ TABS.configuration.initialize = function (callback, scrollPosition) {
             gps_baudrate_e.parent().hide();
         }
 
+        var aux_gps_baudrate_e = $('select.aux_gps_baudrate');
+        for (var i = 0; i < gpsBaudRates.length; i++) {
+            aux_gps_baudrate_e.append('<option value="' + gpsBaudRates[i] + '">' + gpsBaudRates[i] + '</option>');
+        }
+
+        if (semver.lt(CONFIG.apiVersion, "1.6.0")) {
+            aux_gps_baudrate_e.change(function () {
+                SERIAL_CONFIG.auxGpsBaudRate = parseInt($(this).val());
+            });
+            aux_gps_baudrate_e.val(SERIAL_CONFIG.auxGpsBaudRate);
+        } else {
+            aux_gps_baudrate_e.prop("disabled", true);
+            aux_gps_baudrate_e.parent().hide();
+        }
 
         var gps_ubx_sbas_e = $('select.gps_ubx_sbas');
         for (var i = 0; i < gpsSbas.length; i++) {
@@ -788,6 +846,17 @@ TABS.configuration.initialize = function (callback, scrollPosition) {
         });
 
         gps_ubx_sbas_e.val(GPS_CONFIG.ublox_sbas);
+
+        var aux_gps_ubx_sbas_e = $('select.aux_gps_ubx_sbas');
+        for (var i = 0; i < gpsSbas.length; i++) {
+            aux_gps_ubx_sbas_e.append('<option value="' + i + '">' + gpsSbas[i] + '</option>');
+        }
+
+        aux_gps_ubx_sbas_e.change(function () {
+            AUX_GPS_CONFIG.ublox_sbas = parseInt($(this).val());
+        });
+
+        aux_gps_ubx_sbas_e.val(AUX_GPS_CONFIG.ublox_sbas);
 
 
         // generate serial RX
@@ -1089,6 +1158,14 @@ TABS.configuration.initialize = function (callback, scrollPosition) {
             }
         }
 
+        function checkUpdateAuxGpsControls() {
+            if (FEATURE_CONFIG.features.isEnabled('AUX_GPS')) {
+                $('.auxGpsSettings').show();
+            } else {
+                $('.auxGpsSettings').hide();
+            }
+        }
+
         function checkUpdate3dControls() {
             if (FEATURE_CONFIG.features.isEnabled('3D')) {
                 $('._3dSettings').show();
@@ -1121,6 +1198,10 @@ TABS.configuration.initialize = function (callback, scrollPosition) {
 
                 case 'GPS':
                     checkUpdateGpsControls();
+                    break;
+
+                case 'AUX_GPS':
+                    checkUpdateAuxGpsControls();
                     break;
 
                 case '3D':
@@ -1165,6 +1246,7 @@ TABS.configuration.initialize = function (callback, scrollPosition) {
         checkShowSerialRxBox();
         checkShowSpiRxBox();
         checkUpdateGpsControls();
+        checkUpdateAuxGpsControls();
         checkUpdate3dControls();
 
         if (self.SHOW_OLD_BATTERY_CONFIG) {
@@ -1299,9 +1381,23 @@ TABS.configuration.initialize = function (callback, scrollPosition) {
                     GPS_CONFIG.auto_config = $('input[name="gps_auto_config"]').is(':checked') ? 1 : 0;
                 }
 
-                var next_callback = save_motor_3d_config;
+                var next_callback = save_aux_gps_config;
                 if(semver.gte(CONFIG.apiVersion, "1.33.0")) {
                     MSP.send_message(MSPCodes.MSP_SET_GPS_CONFIG, mspHelper.crunch(MSPCodes.MSP_SET_GPS_CONFIG), false, next_callback);
+                } else {
+                    next_callback();
+                }
+            }
+
+            function save_aux_gps_config() {
+                if (semver.gte(CONFIG.apiVersion, "1.34.0")) {
+                    AUX_GPS_CONFIG.auto_baud = $('input[name="aux_gps_auto_baud"]').is(':checked') ? 1 : 0;
+                    AUX_GPS_CONFIG.auto_config = $('input[name="aux_gps_auto_config"]').is(':checked') ? 1 : 0;
+                }
+
+                var next_callback = save_motor_3d_config;
+                if(semver.gte(CONFIG.apiVersion, "1.33.0")) {
+                    MSP.send_message(MSPCodes.MSP_SET_AUX_GPS_CONFIG, mspHelper.crunch(MSPCodes.MSP_SET_AUX_GPS_CONFIG), false, next_callback);
                 } else {
                     next_callback();
                 }
