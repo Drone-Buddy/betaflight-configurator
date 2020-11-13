@@ -1041,6 +1041,12 @@
     "featureGPSTip": {
         "message": "Configure port scenario first"
     },
+    "featureAUX_GPS": {
+        "message": "Enable auxiliary GPS"
+    },
+    "featureAUX_GPSTip": {
+        "message": "Remember to configure port"
+    },
     "featureSONAR": {
         "message": "Sonar"
     },
@@ -1416,6 +1422,9 @@
     "configurationGPS": {
         "message": "GPS"
     },
+    "configurationAUX_GPS": {
+        "message": "AUX GPS"
+    },
     "configurationGPSProtocol": {
         "message": "Protocol"
     },
@@ -1504,6 +1513,9 @@
     },
     "portsFunction_GPS": {
         "message": "GPS"
+    },
+    "portsFunction_AUX_GPS": {
+        "message": "AUX GPS"
     },
     "portsFunction_TELEMETRY_FRSKY": {
         "message": "FrSky"
