@@ -30,6 +30,7 @@ var MOTOR_DATA;
 var MOTOR_TELEMETRY_DATA;
 var SERVO_DATA;
 var GPS_DATA;
+var AUX_GPS_DATA;
 var ANALOG;
 var VOLTAGE_METERS;
 var VOLTAGE_METER_CONFIGS;
@@ -42,6 +43,7 @@ var FC_CONFIG;
 var MISC; // DEPRECATED
 var MOTOR_CONFIG;
 var GPS_CONFIG;
+var AUX_GPS_CONFIG;
 var RSSI_CONFIG;
 var MOTOR_3D_CONFIG;
 var DATAFLASH;
@@ -246,6 +248,24 @@ var FC = {
             cno:                        []
         };
 
+        AUX_GPS_DATA = {
+            fix:                        0,
+            numSat:                     0,
+            lat:                        0,
+            lon:                        0,
+            alt:                        0,
+            speed:                      0,
+            ground_course:              0,
+            distanceToHome:             0,
+            ditectionToHome:            0,
+            update:                     0,
+
+            chn:                        [],
+            svid:                       [],
+            quality:                    [],
+            cno:                        []
+        };
+
         ANALOG = {
             voltage:                    0,
             mAhdrawn:                   0,
@@ -302,6 +322,15 @@ var FC = {
         };
 
         GPS_CONFIG = {
+            provider:                   0,
+            ublox_sbas:                 0,
+            auto_config:                0,
+            auto_baud:                  0,
+            home_point_once:            0,
+            ublox_use_galileo:          0,
+        };
+
+        AUX_GPS_CONFIG = {
             provider:                   0,
             ublox_sbas:                 0,
             auto_config:                0,
