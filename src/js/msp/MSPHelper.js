@@ -18,6 +18,7 @@ function MspHelper () {
     'TELEMETRY_SMARTPORT': 5,
     'RX_SERIAL': 6,
     'BLACKBOX': 7,
+    'AUX_GPS': 8,
     'TELEMETRY_MAVLINK': 9,
     'ESC_SENSOR': 10,
     'TBS_SMARTAUDIO': 11,
@@ -173,10 +174,24 @@ MspHelper.prototype.process_data = function(dataHandler) {
                 GPS_DATA.speed = data.readU16();
                 GPS_DATA.ground_course = data.readU16();
                 break;
+            case MSPCodes.MSP_RAW_AUX_GPS:
+                AUX_GPS_DATA.fix = data.readU8();
+                AUX_GPS_DATA.numSat = data.readU8();
+                AUX_GPS_DATA.lat = data.read32();
+                AUX_GPS_DATA.lon = data.read32();
+                AUX_GPS_DATA.alt = data.readU16();
+                AUX_GPS_DATA.speed = data.readU16();
+                AUX_GPS_DATA.ground_course = data.readU16();
+                break;
             case MSPCodes.MSP_COMP_GPS:
                 GPS_DATA.distanceToHome = data.readU16();
                 GPS_DATA.directionToHome = data.readU16();
                 GPS_DATA.update = data.readU8();
+                break;
+            case MSPCodes.MSP_COMP_AUX_GPS:
+                AUX_GPS_DATA.distanceToHome = data.readU16();
+                AUX_GPS_DATA.directionToHome = data.readU16();
+                AUX_GPS_DATA.update = data.readU8();
                 break;
             case MSPCodes.MSP_ATTITUDE:
                 SENSOR_DATA.kinematics[0] = data.read16() / 10.0; // x
@@ -429,6 +444,19 @@ MspHelper.prototype.process_data = function(dataHandler) {
                     }
                 }
                 break;
+            case MSPCodes.MSP_AUX_GPS_CONFIG:
+                AUX_GPS_CONFIG.provider = data.readU8();
+                AUX_GPS_CONFIG.ublox_sbas = data.readU8();
+                if (semver.gte(CONFIG.apiVersion, "1.34.0")) {
+                    AUX_GPS_CONFIG.auto_config = data.readU8();
+                    AUX_GPS_CONFIG.auto_baud = data.readU8();
+
+                    if (semver.gte(CONFIG.apiVersion, API_VERSION_1_43)) {
+                        AUX_GPS_CONFIG.home_point_once = data.readU8();
+                        AUX_GPS_CONFIG.ublox_use_galileo = data.readU8();
+                    }
+                }
+                break;
             case MSPCodes.MSP_GPS_RESCUE:
                 GPS_RESCUE.angle             = data.readU16();
                 GPS_RESCUE.initialAltitudeM  = data.readU16();
@@ -603,6 +631,9 @@ MspHelper.prototype.process_data = function(dataHandler) {
             case MSPCodes.MSP_SET_GPS_CONFIG:
                 console.log('GPS Configuration saved');
                 break;
+            case MSPCodes.MSP_SET_AUX_GPS_CONFIG:
+                console.log('AUX GPS Configuration saved');
+                break;
             case MSPCodes.MSP_SET_RSSI_CONFIG:
                 console.log('RSSI Configuration saved');
                 break;
@@ -660,6 +691,19 @@ MspHelper.prototype.process_data = function(dataHandler) {
                     }
                 }
                 break;
+            case MSPCodes.MSP_AUX_GPS_SV_INFO:
+                if (data.byteLength > 0) {
+                    var numCh = data.readU8();
+
+                    for (let i = 0; i < numCh; i++) {
+                        AUX_GPS_DATA.chn[i] = data.readU8();
+                        AUX_GPS_DATA.svid[i] = data.readU8();
+                        AUX_GPS_DATA.quality[i] = data.readU8();
+                        AUX_GPS_DATA.cno[i] = data.readU8();
+                    }
+                }
+                break;
+
 
             case MSPCodes.MSP_RX_MAP:
                 RC_MAP = []; // empty the array as new data is coming in
@@ -1751,6 +1795,19 @@ MspHelper.prototype.crunch = function(code) {
                 if (semver.gte(CONFIG.apiVersion, API_VERSION_1_43)) {
                     buffer.push8(GPS_CONFIG.home_point_once)
                           .push8(GPS_CONFIG.ublox_use_galileo);
+                }
+            }
+            break;
+        case MSPCodes.MSP_SET_AUX_GPS_CONFIG:
+            buffer.push8(AUX_GPS_CONFIG.provider)
+                .push8(AUX_GPS_CONFIG.ublox_sbas);
+            if (semver.gte(CONFIG.apiVersion, "1.34.0")) {
+                buffer.push8(AUX_GPS_CONFIG.auto_config)
+                    .push8(AUX_GPS_CONFIG.auto_baud);
+
+                if (semver.gte(CONFIG.apiVersion, API_VERSION_1_43)) {
+                    buffer.push8(AUX_GPS_CONFIG.home_point_once)
+                          .push8(AUX_GPS_CONFIG.ublox_use_galileo);
                 }
             }
             break;
