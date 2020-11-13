@@ -12,6 +12,7 @@ TABS.ports.initialize = function (callback, scrollPosition) {
     var functionRules = [
          {name: 'MSP',                  groups: ['configuration', 'msp'], maxPorts: 2},
          {name: 'GPS',                  groups: ['sensors'], maxPorts: 1},
+         {name: 'AUX_GPS',              groups: ['sensors'], maxPorts: 1},
          {name: 'TELEMETRY_FRSKY',      groups: ['telemetry'], sharableWith: ['msp'], notSharableWith: ['peripherals'], maxPorts: 1},
          {name: 'TELEMETRY_HOTT',       groups: ['telemetry'], sharableWith: ['msp'], notSharableWith: ['peripherals'], maxPorts: 1},
          {name: 'TELEMETRY_SMARTPORT',  groups: ['telemetry'], maxPorts: 1},
