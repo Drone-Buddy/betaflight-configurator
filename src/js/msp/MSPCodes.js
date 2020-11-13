@@ -117,10 +117,15 @@ var MSPCodes = {
 
     MSP_MOTOR_TELEMETRY:            139,
 
+    MSP_AUX_GPS_CONFIG:             140,
+    MSP_RAW_AUX_GPS:                141,
+    MSP_COMP_AUX_GPS:               142,
+
     MSP_STATUS_EX:                  150,
 
     MSP_UID:                        160,
     MSP_GPS_SV_INFO:                164,
+    MSP_AUX_GPS_SV_INFO:            165,
 
     MSP_DISPLAYPORT:                182,
 
@@ -155,6 +160,7 @@ var MSPCodes = {
 
     MSP_SET_VTXTABLE_BAND:          227,
     MSP_SET_VTXTABLE_POWERLEVEL:    228,
+    MSP_SET_AUX_GPS_CONFIG:         229,
 
     MSP_MULTIPLE_MSP:               230,
 
