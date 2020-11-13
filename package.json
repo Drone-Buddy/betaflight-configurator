@@ -3,7 +3,7 @@
   "description": "Crossplatform configuration tool for Betaflight flight control system.",
   "version": "10.7.0",
   "main": "main.html",
-  "chromium-args" : "--disable-features=nw2",
+  "chromium-args": "--disable-features=nw2",
   "default_locale": "en",
   "scripts": {
     "start": "gulp debug",
