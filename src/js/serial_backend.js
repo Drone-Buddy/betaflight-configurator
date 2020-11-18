@@ -629,6 +629,14 @@ function sensor_status(sensors_detected) {
         $('.gpsicon', e_sensor_status).removeClass('active');
     }
 
+    if (have_sensor(sensors_detected, 'aux_gps')) {
+        $('.aux_gps', e_sensor_status).addClass('on');
+    $('.auxgpsicon', e_sensor_status).addClass('active');
+    } else {
+        $('.aux_gps', e_sensor_status).removeClass('on');
+        $('.auxgpsicon', e_sensor_status).removeClass('active');
+    }
+
     if (have_sensor(sensors_detected, 'sonar')) {
         $('.sonar', e_sensor_status).addClass('on');
         $('.sonaricon', e_sensor_status).addClass('active');
@@ -656,6 +664,8 @@ function have_sensor(sensors_detected, sensor_code) {
             } else {
                 return true;
             }
+        case 'aux_gps':
+            return bit_check(sensors_detected, 6);
     }
     return false;
 }
