@@ -121,6 +121,9 @@ var MSPCodes = {
     MSP_RAW_AUX_GPS:                141,
     MSP_COMP_AUX_GPS:               142,
 
+    MSP_GPS_FOLLOW:                 143,
+    MSP_GPS_FOLLOW_PIDS:            144,
+
     MSP_STATUS_EX:                  150,
 
     MSP_UID:                        160,
@@ -163,6 +166,9 @@ var MSPCodes = {
     MSP_SET_AUX_GPS_CONFIG:         229,
 
     MSP_MULTIPLE_MSP:               230,
+
+    MSP_SET_GPS_FOLLOW:             231,
+    MSP_SET_GPS_FOLLOW_PIDS:        232,
 
     MSP_MODE_RANGES_EXTRA:          238,
     MSP_SET_ACC_TRIM:               239,
