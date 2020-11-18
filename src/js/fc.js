@@ -54,6 +54,7 @@ var RC_DEADBAND_CONFIG;
 var SENSOR_ALIGNMENT;
 var RX_CONFIG;
 var FAILSAFE_CONFIG;
+var GPS_FOLLOW;
 var GPS_RESCUE;
 var RXFAIL_CONFIG;
 var PID_ADVANCED_CONFIG;
@@ -543,6 +544,35 @@ var FC = {
             descendRate:                    0,
             allowArmingWithoutFix:          0,
             altitudeMode:                   0,
+        };
+
+        GPS_FOLLOW = {
+            angle:                          0,
+            initialAltitudeM:               0,
+            descentDistanceM:               0,
+            crosstrackGroundSpeed:          0,
+            followGroundSpeed:              0,
+            throttleMin:                    0,
+            throttleMax:                    0,
+            throttleHover:                  0,
+            sanityChecks:                   0,
+            minSats:                        0,
+            minSatsAux:                     0,
+            minFollowDistance:              0,
+            targetFollowAltitudeM:          0,
+            targetFollowDistanceM:          0,
+            ascendRate:                     0,
+            descendRate:                    0,
+            allowArmingWithoutFix:          0,
+            altitudeMode:                   0,
+
+            throttleP:                      0,
+            throttleI:                      0,
+            throttleD:                      0,
+            velP:                           0,
+            velI:                           0,
+            velD:                           0,
+            yawP:                           0,
         };
 
         RXFAIL_CONFIG = [];
