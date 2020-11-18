@@ -229,8 +229,15 @@
     "sensorStatusGPS": {
         "message": "GPS"
     },
+    "sensorStatusAuxGPS": {
+        "message": "AUX GPS"
+    },
     "sensorStatusGPSShort": {
         "message": "GPS",
+        "description": "Text of the image in the top sensors icons. Please keep it short."
+    },
+    "sensorStatusAuxGPSShort": {
+        "message": "Aux",
         "description": "Text of the image in the top sensors icons. Please keep it short."
     },
     "sensorStatusSonar": {
@@ -1042,10 +1049,16 @@
         "message": "Configure port scenario first"
     },
     "featureAUX_GPS": {
-        "message": "Enable auxiliary GPS"
+        "message": "Auxiliary GPS for navigation"
     },
     "featureAUX_GPSTip": {
         "message": "Remember to configure port"
+    },
+    "featureGPS_FOLLOW": {
+        "message": "Configure GPS Follow Mode"
+    },
+    "featureGPS_FOLLOWTip": {
+        "message": "Configure GPS and AUX GPS then setup RC MODE."
     },
     "featureSONAR": {
         "message": "Sonar"
@@ -1458,6 +1471,63 @@
     },
     "configurationGPSHelp": {
         "message": "<strong>Note:</strong> Remember to configure a Serial Port (via Ports tab) when using GPS feature."
+    },
+    "configurationGPS_FOLLOW": {
+        "message": "GPS FOLLOW"
+    },
+    "configurationFollowAngleDegrees": {
+        "message": "Angle (degrees)"
+    },
+    "configurationFollowInitialAltitudeM": {
+        "message": "Initial Altitude (m)"
+    },
+    "configurationFollowDescentDistanceM": {
+        "message": "Descent Distance (m)"
+    },
+    "configurationFollowCrosstrackGroundSpeed": {
+        "message": "Crosstrack Ground Speed (cm / s)"
+    },
+    "configurationFollowFollowGroundSpeed": {
+        "message": "Following Ground Speed (cm / s)"
+    },
+    "configurationFollowThrottleMin": {
+        "message": "Minimum Throttle"
+    },
+    "configurationFollowThrottleMax": {
+        "message": "Maximum Throttle"
+    },
+    "configurationFollowThrottleHover": {
+        "message": "Hover Throttle"
+    },
+    "configurationFollowSanityChecks": {
+        "message": "Require Sanity Checks"
+    },
+    "configurationFollowMinSats": {
+        "message": "Minimum Sats"
+    },
+    "configurationFollowMinSatsAux": {
+        "message": "Minimum Sats for Target"
+    },
+    "configurationFollowMinFollowDistance": {
+        "message": "Minimum Follow Distance (m)"
+    },
+    "configurationFollowAllowArmingWithoutFix": {
+        "message": "Allow Arming without Fix"
+    },
+    "configurationFollowTargetFollowAltitudeM": {
+        "message": "Follow Altitude (m)"
+    },
+    "configurationFollowTargetFollowDistanceM": {
+        "message": "Follow Distance (m)"
+    },
+    "configurationFollowAltitudeMode": {
+        "message": "Altitude Mode"
+    },
+    "configurationFollowAscendRate": {
+        "message": "Ascend Rate (cm / s)"
+    },
+    "configurationFollowDescendRate": {
+        "message": "Descend Rate (cm / s)"
     },
     "configurationSerialRX": {
         "message": "Serial Receiver Provider"
@@ -2341,6 +2411,12 @@
     },
     "gpsHead": {
         "message": "GPS"
+    },
+    "auxGpsHead": {
+        "message": "AUX GPS"
+    },
+    "followHead": {
+        "message": "GPS FOLLOW"
     },
     "gpsMapHead": {
         "message": "Current GPS location"
