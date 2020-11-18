@@ -200,7 +200,7 @@ TABS.ports.initialize = function (callback, scrollPosition) {
             telemetry_baudrate_e.val(serialPort.telemetry_baudrate);
 
             var gpsBaudrate;
-            if (serialPort.functions.indexOf('GPS') >= 0) {
+            if (serialPort.functions.indexOf('GPS') >= 0 || serialPort.functions.indexOf('AUX_GPS') >= 0) {
                 gpsBaudrate = serialPort.gps_baudrate;
             } else {
                 gpsBaudrate = 'AUTO';
