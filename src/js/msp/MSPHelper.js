@@ -457,6 +457,37 @@ MspHelper.prototype.process_data = function(dataHandler) {
                     }
                 }
                 break;
+            case MSPCodes.MSP_GPS_FOLLOW:
+                GPS_FOLLOW.angle                 = data.readU16();
+                GPS_FOLLOW.initialAltitudeM      = data.readU16();
+                GPS_FOLLOW.descentDistanceM      = data.readU16();
+                GPS_FOLLOW.crosstrackGroundSpeed = data.readU16();
+                GPS_FOLLOW.followGroundSpeed     = data.readU16();
+                GPS_FOLLOW.throttleMin           = data.readU16();
+                GPS_FOLLOW.throttleMax           = data.readU16();
+                GPS_FOLLOW.throttleHover         = data.readU16();
+                GPS_FOLLOW.sanityChecks          = data.readU8();
+                GPS_FOLLOW.minSats               = data.readU8();
+                GPS_FOLLOW.minSatsAux            = data.readU8();
+                GPS_FOLLOW.minFollowDistance     = data.readU16();
+                GPS_FOLLOW.targetFollowAltitudeM = data.readU16();
+                GPS_FOLLOW.targetFollowDistanceM = data.readU16();
+                if (semver.gte(CONFIG.apiVersion, API_VERSION_1_43)) {
+                    GPS_FOLLOW.ascendRate            = data.readU16();
+                    GPS_FOLLOW.descendRate           = data.readU16();
+                    GPS_FOLLOW.allowArmingWithoutFix = data.readU8();
+                    GPS_FOLLOW.altitudeMode          = data.readU8();
+                }
+                break;
+            case MSPCodes.MSP_GPS_FOLLOW_PIDS:
+                GPS_FOLLOW.throttleP         = data.readU16();
+                GPS_FOLLOW.throttleI         = data.readU16();
+                GPS_FOLLOW.throttleD         = data.readU16();
+                GPS_FOLLOW.velP              = data.readU16();
+                GPS_FOLLOW.velI              = data.readU16();
+                GPS_FOLLOW.velD              = data.readU16();
+                GPS_FOLLOW.yawP              = data.readU16();
+                break;
             case MSPCodes.MSP_GPS_RESCUE:
                 GPS_RESCUE.angle             = data.readU16();
                 GPS_RESCUE.initialAltitudeM  = data.readU16();
@@ -1810,6 +1841,38 @@ MspHelper.prototype.crunch = function(code) {
                           .push8(AUX_GPS_CONFIG.ublox_use_galileo);
                 }
             }
+            break;
+        case MSPCodes.MSP_SET_GPS_FOLLOW:
+            buffer.push16(GPS_FOLLOW.angle)
+                  .push16(GPS_FOLLOW.initialAltitudeM)
+                  .push16(GPS_FOLLOW.descentDistanceM)
+                  .push16(GPS_FOLLOW.crosstrackGroundSpeed)
+                  .push16(GPS_FOLLOW.followGroundSpeed)
+                  .push16(GPS_FOLLOW.throttleMin)
+                  .push16(GPS_FOLLOW.throttleMax)
+                  .push16(GPS_FOLLOW.throttleHover)
+                  .push8(GPS_FOLLOW.sanityChecks)
+                  .push8(GPS_FOLLOW.minSats)
+                  .push8(GPS_FOLLOW.minSatsAux)
+                  .push16(GPS_FOLLOW.minFollowDistance)
+                  .push16(GPS_FOLLOW.targetFollowAltitudeM)
+                  .push16(GPS_FOLLOW.targetFollowDistanceM);
+
+                if (semver.gte(CONFIG.apiVersion, API_VERSION_1_43)) {
+                    buffer.push16(GPS_FOLLOW.ascendRate)
+                          .push16(GPS_FOLLOW.descendRate)
+                          .push8(GPS_FOLLOW.allowArmingWithoutFix)
+                          .push8(GPS_FOLLOW.altitudeMode);
+                }
+            break;
+        case MSPCodes.MSP_SET_GPS_FOLLOW_PIDS:
+            buffer.push16(GPS_FOLLOW.throttleP)
+                  .push16(GPS_FOLLOW.throttleI)
+                  .push16(GPS_FOLLOW.throttleD)
+                  .push16(GPS_FOLLOW.velP)
+                  .push16(GPS_FOLLOW.velI)
+                  .push16(GPS_FOLLOW.velD)
+                  .push16(GPS_FOLLOW.yawP)
             break;
         case MSPCodes.MSP_SET_GPS_RESCUE:
             buffer.push16(GPS_RESCUE.angle)
