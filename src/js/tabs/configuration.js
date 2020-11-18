@@ -72,9 +72,18 @@ TABS.configuration.initialize = function (callback, scrollPosition) {
     }
 
     function load_aux_gps_config() {
-        var next_callback = load_acc_trim;
+        var next_callback = load_gps_follow_config;
         if(semver.gte(CONFIG.apiVersion, "1.33.0")) {
             MSP.send_message(MSPCodes.MSP_AUX_GPS_CONFIG, false, false, next_callback);
+        } else {
+            next_callback();
+        }
+    }
+
+    function load_gps_follow_config() {
+        var next_callback = load_acc_trim;
+        if(semver.gte(CONFIG.apiVersion, "1.33.0")) {
+            MSP.send_message(MSPCodes.MSP_GPS_FOLLOW, false, false, next_callback);
         } else {
             next_callback();
         }
@@ -859,6 +868,124 @@ TABS.configuration.initialize = function (callback, scrollPosition) {
         aux_gps_ubx_sbas_e.val(AUX_GPS_CONFIG.ublox_sbas);
 
 
+        // GPS Follow elements
+        const followAngleDegrees_e = $('input[name="followAngleDegrees"]');
+        followAngleDegrees_e.on('change', function () {
+            GPS_FOLLOW.angle = parseInt($(this).val());
+        });
+        followAngleDegrees_e.val(GPS_FOLLOW.angle);
+
+        const followInitialAltitudeM_e = $('input[name="followInitialAltitudeM"]');
+        followInitialAltitudeM_e.on('change', function () {
+            GPS_FOLLOW.initialAltitudeM = parseInt($(this).val());
+        });
+        followInitialAltitudeM_e.val(GPS_FOLLOW.initialAltitudeM);
+
+        const followDescentDistanceM_e = $('input[name="followDescentDistanceM"]');
+        followDescentDistanceM_e.on('change', function () {
+            GPS_FOLLOW.descentDistanceM = parseInt($(this).val());
+        });
+        followDescentDistanceM_e.val(GPS_FOLLOW.descentDistanceM);
+
+        const followCrosstrackGroundSpeed_e = $('input[name="followCrosstrackGroundSpeed"]');
+        followCrosstrackGroundSpeed_e.on('change', function () {
+            GPS_FOLLOW.crosstrackGroundSpeed = parseInt($(this).val());
+        });
+        followCrosstrackGroundSpeed_e.val(GPS_FOLLOW.crosstrackGroundSpeed);
+
+        const followFollowGroundSpeed_e = $('input[name="followFollowGroundSpeed"]');
+        followFollowGroundSpeed_e.on('change', function () {
+            GPS_FOLLOW.followGroundSpeed = parseInt($(this).val());
+        });
+        followFollowGroundSpeed_e.val(GPS_FOLLOW.followGroundSpeed);
+
+        const followThrottleMin_e = $('input[name="followThrottleMin"]');
+        followThrottleMin_e.on('change', function () {
+            GPS_FOLLOW.throttleMin = parseInt($(this).val());
+        });
+        followThrottleMin_e.val(GPS_FOLLOW.throttleMin);
+
+        const followThrottleMax_e = $('input[name="followThrottleMax"]');
+        followThrottleMax_e.on('change', function () {
+            GPS_FOLLOW.throttleMax = parseInt($(this).val());
+        });
+        followThrottleMax_e.val(GPS_FOLLOW.throttleMax);
+
+        const followThrottleHover_e = $('input[name="followThrottleHover"]');
+        followThrottleHover_e.on('change', function () {
+            GPS_FOLLOW.throttleHover = parseInt($(this).val());
+        });
+        followThrottleHover_e.val(GPS_FOLLOW.throttleHover);
+
+        const followSanityChecks_e = $('input[name="followSanityChecks"');
+        followSanityChecks_e.on('change', function() {
+            GPS_FOLLOW.sanityChecks = $(this).is(':checked') ? 1 : 0;
+        });
+        followSanityChecks_e.prop('checked', GPS_FOLLOW.sanityChecks === 1);
+
+        const followMinSats_e = $('input[name="followMinSats"]');
+        followMinSats_e.on('change', function () {
+            GPS_FOLLOW.minSats = parseInt($(this).val());
+        });
+        followMinSats_e.val(GPS_FOLLOW.minSats);
+
+        const followMinSatsAux_e = $('input[name="followMinSatsAux"]');
+        followMinSatsAux_e.on('change', function () {
+            GPS_FOLLOW.minSatsAux = parseInt($(this).val());
+        });
+        followMinSatsAux_e.val(GPS_FOLLOW.minSatsAux);
+
+        const followMinFollowDistance_e = $('input[name="followMinFollowDistance"]');
+        followMinFollowDistance_e.on('change', function () {
+            GPS_FOLLOW.minFollowDistance = parseInt($(this).val());
+        });
+        followMinFollowDistance_e.val(GPS_FOLLOW.minFollowDistance);
+
+        const followAllowArmingWithoutFix_e = $('input[name="followAllowArmingWithoutFix"');
+        followAllowArmingWithoutFix_e.on('change', function() {
+            GPS_FOLLOW.allowArmingWithoutFix = $(this).is(':checked') ? 1 : 0;
+        });
+        followAllowArmingWithoutFix_e.prop('checked', GPS_FOLLOW.allowArmingWithout === 1);
+
+        const followTargetFollowAltitudeM_e = $('input[name="followTargetFollowAltitudeM"]');
+        followTargetFollowAltitudeM_e.on('change', function () {
+            GPS_FOLLOW.targetFollowAltitudeM = parseInt($(this).val());
+        });
+        followTargetFollowAltitudeM_e.val(GPS_FOLLOW.targetFollowAltitudeM);
+
+        const followTargetFollowDistanceM_e = $('input[name="followTargetFollowDistanceM"]');
+        followTargetFollowDistanceM_e.on('change', function () {
+            GPS_FOLLOW.targetFollowDistanceM = parseInt($(this).val());
+        });
+        followTargetFollowDistanceM_e.val(GPS_FOLLOW.targetFollowDistanceM);
+
+        const followAltitudeModes = [
+            'FIXED ALTITUDE',
+            'CURRENT ALTITUDE',
+        ];
+        const followAltitudeMode_e = $('select.followAltitudeMode')
+        for (var i = 0; i < followAltitudeModes.length; i++) {
+            followAltitudeMode_e.append('<option value="' + i + '">' + followAltitudeModes[i] + '</option>');
+        }
+        followAltitudeMode_e.on('change', function () {
+            GPS_FOLLOW.altitudeMode = parseInt($(this).val());
+        });
+
+        // select current serial RX type
+        followAltitudeMode_e.val(GPS_FOLLOW.altitudeMode);
+
+        const followAscendRate_e = $('input[name="followAscendRate"]');
+        followAscendRate_e.on('change', function () {
+            GPS_FOLLOW.ascendRate = parseInt($(this).val());
+        });
+        followAscendRate_e.val(GPS_FOLLOW.ascendRate);
+        
+        const followDescendRate_e = $('input[name="followDescendRate"]');
+        followDescendRate_e.on('change', function () {
+            GPS_FOLLOW.descendRate = parseInt($(this).val());
+        });
+        followDescendRate_e.val(GPS_FOLLOW.descendRate);
+
         // generate serial RX
         var serialRXtypes = [
             'SPEKTRUM1024',
@@ -1166,6 +1293,14 @@ TABS.configuration.initialize = function (callback, scrollPosition) {
             }
         }
 
+        function checkUpdateGpsFollowControls() {
+            if (FEATURE_CONFIG.features.isEnabled('GPS_FOLLOW')) {
+                $('.gpsFollowSettings').show();
+            } else {
+                $('.gpsFollowSettings').hide();
+            }
+        }
+
         function checkUpdate3dControls() {
             if (FEATURE_CONFIG.features.isEnabled('3D')) {
                 $('._3dSettings').show();
@@ -1202,6 +1337,10 @@ TABS.configuration.initialize = function (callback, scrollPosition) {
 
                 case 'AUX_GPS':
                     checkUpdateAuxGpsControls();
+                    break;
+
+                case 'GPS_FOLLOW':
+                    checkUpdateGpsFollowControls();
                     break;
 
                 case '3D':
@@ -1247,6 +1386,7 @@ TABS.configuration.initialize = function (callback, scrollPosition) {
         checkShowSpiRxBox();
         checkUpdateGpsControls();
         checkUpdateAuxGpsControls();
+        checkUpdateGpsFollowControls();
         checkUpdate3dControls();
 
         if (self.SHOW_OLD_BATTERY_CONFIG) {
@@ -1395,9 +1535,18 @@ TABS.configuration.initialize = function (callback, scrollPosition) {
                     AUX_GPS_CONFIG.auto_config = $('input[name="aux_gps_auto_config"]').is(':checked') ? 1 : 0;
                 }
 
-                var next_callback = save_motor_3d_config;
+                var next_callback = save_gps_follow_config;
                 if(semver.gte(CONFIG.apiVersion, "1.33.0")) {
                     MSP.send_message(MSPCodes.MSP_SET_AUX_GPS_CONFIG, mspHelper.crunch(MSPCodes.MSP_SET_AUX_GPS_CONFIG), false, next_callback);
+                } else {
+                    next_callback();
+                }
+            }
+
+            function save_gps_follow_config() {
+                var next_callback = save_motor_3d_config;
+                if(semver.gte(CONFIG.apiVersion, "1.33.0")) {
+                    MSP.send_message(MSPCodes.MSP_SET_GPS_FOLLOW, mspHelper.crunch(MSPCodes.MSP_SET_GPS_FOLLOW), false, next_callback);
                 } else {
                     next_callback();
                 }
