@@ -715,7 +715,7 @@ function updateTabList(features) {
         $('#tabs ul.mode-connected li.tab_logging').hide();
     }
 
-    if (features.isEnabled('GPS') && isExpertModeEnabled()) {
+    if ((features.isEnabled('GPS') || features.isEnabled('AUX_GPS')) && isExpertModeEnabled()) {
         $('#tabs ul.mode-connected li.tab_gps').show();
     } else {
         $('#tabs ul.mode-connected li.tab_gps').hide();
