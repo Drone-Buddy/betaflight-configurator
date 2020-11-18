@@ -19,6 +19,7 @@ var Features = function (config) {
         {bit: 15, group: 'rssi', name: 'RSSI_ADC'},
         {bit: 16, group: 'other', name: 'LED_STRIP'},
         {bit: 17, group: 'other', name: 'DISPLAY', haveTip: true},
+        {bit: 26, group: 'gps_follow', name: 'GPS_FOLLOW', haveTip: true},
         {bit: 30, group: 'aux_gps', name: 'AUX_GPS', haveTip: true},
     ];
 
