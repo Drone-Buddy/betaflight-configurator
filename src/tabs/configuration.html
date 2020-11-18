@@ -666,6 +666,141 @@
                         </div>
                     </div>
 
+                    <!-- GPS FOLLOW -->
+                    <div class="follow">
+                        <div class="gui_box grey follow">
+                            <div class="gui_box_titlebar">
+                                <div class="spacer_box_title" i18n="configurationGPS_FOLLOW"></div>
+                            </div>
+                            <div class="spacer_box">
+                                <table class="featuresMultiple">
+                                    <thead>
+                                        <tr>
+                                            <th i18n="configurationFeatureEnabled"></th>
+                                            <th i18n="configurationFeatureDescription"></th>
+                                            <th i18n="configurationFeatureName"></th>
+                                        </tr>
+                                    </thead>
+                                    <tbody class="features gps_follow">
+                                        <!-- table generated here -->
+                                    </tbody>
+                                </table>
+                                <div class="gpsFollowSettings">
+                                    <div style="float:left; width:100%;">
+                                        <div class="number followAngleDegrees">
+                                            <label> 
+                                                <input type="number" name="followAngleDegrees" step="1" min="0" max="200" /> 
+                                                <span i18n="configurationFollowAngleDegrees"></span>
+                                            </label>
+                                        </div>
+                                        <div class="number followInitialAltitudeM">
+                                            <label> 
+                                                <input type="number" name="followInitialAltitudeM" step="1" min="1" max="100" /> 
+                                                <span i18n="configurationFollowInitialAltitudeM"></span>
+                                            </label>
+                                        </div>
+                                        <div class="number followDescentDistanceM">
+                                            <label> 
+                                                <input type="number" name="followDescentDistanceM" step="1" min="1" max="500" /> 
+                                                <span i18n="configurationFollowDescentDistanceM"></span>
+                                            </label>
+                                        </div>
+                                        <div class="number followCrosstrackGroundSpeed">
+                                            <label> 
+                                                <input type="number" name="followCrosstrackGroundSpeed" step="1" min="30" max="3000" /> 
+                                                <span i18n="configurationFollowCrosstrackGroundSpeed"></span>
+                                            </label>
+                                        </div>
+                                        <div class="number followFollowGroundSpeed">
+                                            <label> 
+                                                <input type="number" name="followFollowGroundSpeed" step="1" min="30" max="3000" /> 
+                                                <span i18n="configurationFollowFollowGroundSpeed"></span>
+                                            </label>
+                                        </div>
+                                        <div class="number followThrottleMin">
+                                            <label> 
+                                                <input type="number" name="followThrottleMin" step="1" min="1000" max="2000" /> 
+                                                <span i18n="configurationFollowThrottleMin"></span>
+                                            </label>
+                                        </div>
+                                        <div class="number followThrottleMax">
+                                            <label> 
+                                                <input type="number" name="followThrottleMax" step="1" min="1000" max="2000" /> 
+                                                <span i18n="configurationFollowThrottleMax"></span>
+                                            </label>
+                                        </div>
+                                        <div class="number followThrottleHover">
+                                            <label> 
+                                                <input type="number" name="followThrottleHover" step="1" min="1000" max="2000" /> 
+                                                <span i18n="configurationFollowThrottleHover"></span>
+                                            </label>
+                                        </div>
+                                        <div class="select followSanityChecks">
+                                            <div style="display: inline">
+                                                <input type="checkbox" name="followSanityChecks" class="toggle" />
+                                            </div>
+                                            <span class="freelabel" i18n="configurationFollowSanityChecks"></span>
+                                        </div>
+                                        <div class="number followMinSats">
+                                            <label> 
+                                                <input type="number" name="followMinSats" step="1" min="5" max="50" /> 
+                                                <span i18n="configurationFollowMinSats"></span>
+                                            </label>
+                                        </div>
+                                        <div class="number followMinSatsAux">
+                                            <label> 
+                                                <input type="number" name="followMinSatsAux" step="1" min="5" max="50" /> 
+                                                <span i18n="configurationFollowMinSatsAux"></span>
+                                            </label>
+                                        </div>
+                                        <div class="number followMinFollowDistance">
+                                            <label> 
+                                                <input type="number" name="followMinFollowDistance" step="1" min="2" max="10" /> 
+                                                <span i18n="configurationFollowMinFollowDistance"></span>
+                                            </label>
+                                        </div>
+                                        <div class="select followAllowArmingWithoutFix">
+                                            <div style="display: inline">
+                                                <input type="checkbox" name="followAllowArmingWithoutFix" class="toggle" />
+                                            </div>
+                                            <span class="freelabel" i18n="configurationFollowAllowArmingWithoutFix"></span>
+                                        </div>
+                                        <div class="number followTargetFollowAltitudeM">
+                                            <label> 
+                                                <input type="number" name="followTargetFollowAltitudeM" step="1" min="2" max="10" /> 
+                                                <span i18n="configurationFollowTargetFollowAltitudeM"></span>
+                                            </label>
+                                        </div>
+                                        <div class="number followTargetFollowDistanceM">
+                                            <label> 
+                                                <input type="number" name="followTargetFollowDistanceM" step="1" min="2" max="10" /> 
+                                                <span i18n="configurationFollowTargetFollowDistanceM"></span>
+                                            </label>
+                                        </div>
+                                        <div class="select followAltitudeMode">
+                                                <select class="followAltitudeMode">
+                                                    <!-- list generated here -->
+                                                </select>
+                                                <span i18n="configurationFollowAltitudeMode"></span>
+                                        </div>
+                                        <div class="number followAscendRate">
+                                            <label> 
+                                                <input type="number" name="followAscendRate" step="10" min="50" max="2500" /> 
+                                                <span i18n="configurationFollowAscendRate"></span>
+                                            </label>
+                                        </div>
+                                        <div class="number followDescendRate">
+                                            <label> 
+                                                <input type="number" name="followDescendRate" step="10" min="50" max="500" /> 
+                                                <span i18n="configurationFollowDescendRate"></span>
+                                            </label>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
                 </td>
             </tr>
             <tr class="oldBatteryConfig">
