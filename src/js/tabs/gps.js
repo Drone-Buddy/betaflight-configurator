@@ -35,12 +35,25 @@ TABS.gps.initialize = function (callback) {
         }
 
         function get_comp_gps_data() {
-            MSP.send_message(MSPCodes.MSP_COMP_GPS, false, false, get_gpsvinfo_data);
+            MSP.send_message(MSPCodes.MSP_COMP_GPS, false, false, get_gps_sv_info_data);
         }
 
-        function get_gpsvinfo_data() {
-            MSP.send_message(MSPCodes.MSP_GPS_SV_INFO, false, false, update_ui);
+        function get_gps_sv_info_data() {
+            MSP.send_message(MSPCodes.MSP_GPS_SV_INFO, false, false, get_raw_aux_gps_data);
         }
+
+        function get_raw_aux_gps_data() {
+            MSP.send_message(MSPCodes.MSP_RAW_AUX_GPS, false, false, get_comp_aux_gps_data);
+        }
+
+        function get_comp_aux_gps_data() {
+            MSP.send_message(MSPCodes.MSP_COMP_AUX_GPS, false, false, get_aux_gps_sv_info_data);
+        }
+
+        function get_aux_gps_sv_info_data() {
+            MSP.send_message(MSPCodes.MSP_AUX_GPS_SV_INFO, false, false, update_ui);
+        }
+
 
         // To not flicker the divs while the fix is unstable
         var gpsWasFixed = false;
@@ -50,6 +63,12 @@ TABS.gps.initialize = function (callback) {
             var lon = GPS_DATA.lon / 10000000;
             var url = 'https://maps.google.com/?q=' + lat + ',' + lon;
             var alt = GPS_DATA.alt;
+            
+            var auxLat = AUX_GPS_DATA.lat / 10000000;
+            var auxLon = AUX_GPS_DATA.lon / 10000000;
+            var auxUrl = 'https://maps.google.com/?q=' + auxLat + ',' + auxLon;
+            var auxAlt = AUX_GPS_DATA.alt;
+
             if (semver.lt(CONFIG.apiVersion, "1.39.0")) {
                 alt = alt / 10;
             }
@@ -62,6 +81,14 @@ TABS.gps.initialize = function (callback) {
             $('.GPS_info td.sats').text(GPS_DATA.numSat);
             $('.GPS_info td.distToHome').text(GPS_DATA.distanceToHome + ' m');
 
+            $('.GPS_info td.auxFix').html((AUX_GPS_DATA.fix) ? i18n.getMessage('gpsFixTrue') : i18n.getMessage('gpsFixFalse'));
+            $('.GPS_info td.auxAlt').text(auxAlt + ' m');
+            $('.GPS_info td.auxLat a').prop('href', auxUrl).text(auxLat.toFixed(4) + ' deg');
+            $('.GPS_info td.auxLon a').prop('href', auxUrl).text(auxLon.toFixed(4) + ' deg');
+            $('.GPS_info td.auxSpeed').text(AUX_GPS_DATA.speed + ' cm/s');
+            $('.GPS_info td.auxSats').text(AUX_GPS_DATA.numSat);
+            $('.GPS_info td.auxDistToHome').text(AUX_GPS_DATA.distanceToHome + ' m');
+
             // Update GPS Signal Strengths
             var e_ss_table = $('div.GPS_signal_strength table tr:not(.titles)');
 
@@ -72,19 +99,29 @@ TABS.gps.initialize = function (callback) {
                 $('td', row).eq(1).text(GPS_DATA.quality[i]);
                 $('td', row).eq(2).find('progress').val(GPS_DATA.cno[i]);
             }
+
+            var e_aux_ss_table = $('div.aux_GPS_signal_strength table tr:not(.titles)');
+
+            for (var i = 0; i < AUX_GPS_DATA.chn.length; i++) {
+                var row = e_aux_ss_table.eq(i);
+
+                $('td', row).eq(0).text(AUX_GPS_DATA.svid[i]);
+                $('td', row).eq(1).text(AUX_GPS_DATA.quality[i]);
+                $('td', row).eq(2).find('progress').val(AUX_GPS_DATA.cno[i]);
+            }
             
 
             var message = {
                 action: 'center',
-                lat: lat,
-                lon: lon
+                lat: GPS_DATA.fix ? lat : auxLat,
+                lon: GPS_DATA.fix ? lon : auxLon
             };
 
             var frame = document.getElementById('map');
             if (navigator.onLine) {
                 $('#connect').hide();
 
-                if (GPS_DATA.fix) {
+                if (GPS_DATA.fix || AUX_GPS_DATA.fix) {
                    gpsWasFixed = true;
                    frame.contentWindow.postMessage(message, '*');
                    $('#loadmap').show();
@@ -96,7 +133,7 @@ TABS.gps.initialize = function (callback) {
                     message.action = 'nofix';
                     frame.contentWindow.postMessage(message, '*');
                 }
-            }else{
+            } else {
                 gpsWasFixed = false;
                 $('#connect').show();
                 $('#waiting').hide(); 
