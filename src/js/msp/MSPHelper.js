@@ -665,6 +665,12 @@ MspHelper.prototype.process_data = function(dataHandler) {
             case MSPCodes.MSP_SET_AUX_GPS_CONFIG:
                 console.log('AUX GPS Configuration saved');
                 break;
+            case MSPCodes.MSP_SET_GPS_FOLLOW:
+                console.log('GPS Follow Configuration saved');
+                break;
+            case MSPCodes.MSP_SET_GPS_FOLLOW_PIDS:
+                console.log('GPS Follow PIDs saved');
+                break;
             case MSPCodes.MSP_SET_RSSI_CONFIG:
                 console.log('RSSI Configuration saved');
                 break;
