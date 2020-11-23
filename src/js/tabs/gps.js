@@ -109,29 +109,64 @@ TABS.gps.initialize = function (callback) {
                 $('td', row).eq(1).text(AUX_GPS_DATA.quality[i]);
                 $('td', row).eq(2).find('progress').val(AUX_GPS_DATA.cno[i]);
             }
-            
 
-            var message = {
-                action: 'center',
-                lat: GPS_DATA.fix ? lat : auxLat,
-                lon: GPS_DATA.fix ? lon : auxLon
-            };
+            var centerLat, centerLon;
+            if (GPS_DATA.fix && AUX_GPS_DATA.fix) {
+                centerLat = (lat + auxLat) / 2;
+                centerLon = (lon + auxLon) / 2;
+            } else if (GPS_DATA.fix) {
+                centerLat = lat;
+                centerLon = lon;
+            } else if (AUX_GPS_DATA.fix) {
+                centerLat = auxLat;
+                centerLon = auxLon;
+            }
 
             var frame = document.getElementById('map');
             if (navigator.onLine) {
                 $('#connect').hide();
-
                 if (GPS_DATA.fix || AUX_GPS_DATA.fix) {
-                   gpsWasFixed = true;
-                   frame.contentWindow.postMessage(message, '*');
-                   $('#loadmap').show();
-                   $('#waiting').hide();
+                    gpsWasFixed = true;
+                    $('#loadmap').show();
+                    $('#waiting').hide();
+                    
+                    // Center map
+                    var message = {
+                        action: 'center',
+                        lat: centerLat,
+                        lon: centerLon
+                    };
+                    frame.contentWindow.postMessage(message, '*');
+
+                    // Show main GPS
+                    if (GPS_DATA.fix) {
+                        var message = {
+                            action: 'fix',
+                            lat: lat,
+                            lon: lon 
+                        };
+                        frame.contentWindow.postMessage(message, '*');
+                    } else {
+                        var message = { action: 'nofix' };
+                        frame.contentWindow.postMessage(message, '*');
+                    }
+
+                    // Show aux GPS
+                    if (AUX_GPS_DATA.fix) {
+                        var message = {
+                            action: 'aux_fix',
+                            lat: auxLat,
+                            lon: auxLon
+                        };
+                        frame.contentWindow.postMessage(message, '*');
+                    } else {
+                        var message = { action: 'aux_no_fix' };
+                        frame.contentWindow.postMessage(message, '*');
+                    }
+
                 } else if (!gpsWasFixed) {
                    $('#loadmap').hide();
                    $('#waiting').show();
-                } else {
-                    message.action = 'nofix';
-                    frame.contentWindow.postMessage(message, '*');
                 }
             } else {
                 gpsWasFixed = false;
